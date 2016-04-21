@@ -60,6 +60,30 @@ def main():
         metavar="NAME",
         help="saves the plot as the given NAME (extension honored)",
     )
+    parser.add_argument(
+        "--no-si",
+        dest="si",
+        action="store_false",
+        help="hides Bragg reflections for Si in orinetation (100)",
+    )
+    parser.add_argument(
+        "--no-zrc",
+        dest="zrc",
+        action="store_false",
+        help="hides Bragg reflections for ZrC",
+    )
+    parser.add_argument(
+        "--zr3c2",
+        dest="zr3c2",
+        action="store_true",
+        help="shows Bragg reflections for delta-Zr3C2",
+    )
+    parser.add_argument(
+        "--zr",
+        dest="zr",
+        action="store_true",
+        help="shows most intense Bragg reflections for Zr",
+    )
     args = parser.parse_args()
 
     for i, filename in enumerate(args.datafiles):
@@ -78,17 +102,39 @@ def main():
         plt.semilogy(angle, scan_data)
 
         ymin, ymax = plt.ylim()
-        for a, p in [(33, "(200)"), (69.13, "(400)"), (117, "(600)")]:
-            plt.plot((a, a), (ymin, ymax), "k--")
-            plt.text(a, ymax / 2.5, "Si " + p, ha="right", rotation="vertical",
-                     va="top")
 
-        for a, p in [(33.5, "(111)"), (38, "(200)"), (55, "(220)"),
-                     (65, "(311)"), (81, "(400)"), (93, "(420)"),
-                     (108, "(422)")]:
-            plt.plot((a, a), (ymin, ymax), "k:")
-            plt.text(a + 0.5, ymax, "ZrC " + p, ha="left", rotation="vertical",
-                     va="top")
+        if args.si:
+            for a, p in [(32.959, "(200)"), (69.132, "(400)"), (117, "(600)")]:
+                plt.plot((a, a), (ymin, ymax), "k--")
+                plt.text(a, ymax / 2.5, "Si " + p, ha="right",
+                         rotation="vertical", va="top")
+
+        if args.zrc:
+            for a, p in [(33.041, "(111)"), (38.338, "(200)"),
+                         (55.325, "(220)"), (65.969, "(311)"),
+                         (82.051, "(400)"), (91.340, "(331)"),
+                         (94.455, "(420)"), (107.061, "(422)"),
+                         (117.064, "(511)")]:
+                plt.plot((a, a), (ymin, ymax), "k:")
+                plt.text(a, ymax, "ZrC " + p, ha="left", rotation="vertical",
+                         va="top")
+
+        if args.zr3c2:
+            for a, p in [(17.846, "(003)"), (35.966, "(102)"),
+                         (36.145, "(006)"), (55.336, "(017)"),
+                         (60.511, "(110)"), (60.753, "(108)")]:
+                plt.plot((a, a), (ymin, ymax), "b-.")
+                plt.text(a + 0.5, ymax, "$\delta-$Zr3C2 " + p, ha="left",
+                         rotation="vertical", va="top")
+
+        if args.zr:
+            for a, p in [(31.958, "(100)"), (34.838, "(002)"),
+                         (36.509, "(101)"), (47.993, "(102)"),
+                         (56.932, "(110)"), (63.537, "(103)"),
+                         (68.534, "(112)"), (69.578, "(201)")]:
+                plt.plot((a, a), (ymin, ymax), "r-.")
+                plt.text(a, ymax, "Zr " + p, ha="left", rotation="vertical",
+                         va="top")
 
     plt.xlabel("2$\Theta$ ($^{\circ}$)")
     plt.ylabel("Intensity")
