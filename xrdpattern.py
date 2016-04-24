@@ -124,7 +124,7 @@ def main():
                      (36.145, "(006)"), (55.336, "(017)"),
                      (60.511, "(110)"), (60.753, "(108)")]:
             plt.plot((a, a), (ymin, ymax), "b-.")
-            plt.text(a + 0.5, ymax, "$\delta-$Zr3C2 " + p, ha="left",
+            plt.text(a, ymax / 7.5, "$\delta-$Zr3C2 " + p, ha="left",
                      rotation="vertical", va="top")
             
     if args.zr:
@@ -133,8 +133,8 @@ def main():
                      (56.932, "(110)"), (63.537, "(103)"),
                      (68.534, "(112)"), (69.578, "(201)")]:
             plt.plot((a, a), (ymin, ymax), "r-.")
-            plt.text(a, ymax, "Zr " + p, ha="left", rotation="vertical",
-                     va="top")
+            plt.text(a, ymax / 7.5, "Zr " + p, ha="left",
+                     rotation="vertical", va="top")
 
     plt.xlabel("2$\Theta$ ($^{\circ}$)")
     plt.ylabel("Intensity")
