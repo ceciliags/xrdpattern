@@ -50,6 +50,10 @@ def main():
         help="a title for the plot",
     )
     parser.add_argument(
+        "-l", "--labels",
+        help="non-default labels for the datafiles separated by commas",
+    )
+    parser.add_argument(
         "--no-show",
         dest="show",
         action="store_false",
@@ -86,6 +90,15 @@ def main():
     )
     args = parser.parse_args()
 
+    if args.labels:
+        labels = args.labels.split(",")
+        if len(labels) != len(args.datafiles):
+            raise RuntimeError(
+                "Number of labels does not match number of datafiles"
+            )
+    else:
+        labels = []
+
     for i, filename in enumerate(args.datafiles):
         sample, first_angle, scan_range, step_width, scan_data = \
             parse_data(filename)
@@ -97,7 +110,10 @@ def main():
         )
         scan_data = np.array(scan_data) * 1000**i
 
-        plt.text(angle[-1], scan_data[-1], sample)
+        plt.text(angle[-1], scan_data[-1], sample, va="bottom")
+
+        if labels:
+            plt.text(angle[-1], scan_data[-1], labels[i], va="top")
 
         plt.semilogy(angle, scan_data)
 
@@ -108,7 +124,7 @@ def main():
             plt.plot((a, a), (ymin, ymax), "k--")
             plt.text(a, ymax / 2.5, "Si " + p, ha="right",
                      rotation="vertical", va="top")
-            
+
     if args.zrc:
         for a, p in [(33.041, "(111)"), (38.338, "(200)"),
                      (55.325, "(220)"), (65.969, "(311)"),
@@ -118,7 +134,7 @@ def main():
             plt.plot((a, a), (ymin, ymax), "k:")
             plt.text(a, ymax, "ZrC " + p, ha="left", rotation="vertical",
                      va="top")
-            
+
     if args.zr3c2:
         for a, p in [(17.846, "(003)"), (35.966, "(102)"),
                      (36.145, "(006)"), (55.336, "(017)"),
@@ -126,7 +142,7 @@ def main():
             plt.plot((a, a), (ymin, ymax), "b-.")
             plt.text(a, ymax / 7.5, "$\delta-$Zr3C2 " + p, ha="left",
                      rotation="vertical", va="top")
-            
+
     if args.zr:
         for a, p in [(31.958, "(100)"), (34.838, "(002)"),
                      (36.509, "(101)"), (47.993, "(102)"),
